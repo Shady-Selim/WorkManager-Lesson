@@ -5,6 +5,6 @@ import com.shady.workmanagerlesson.data.StockRepo
 
 class MainViewModel: ViewModel() {
     private val repo = StockRepo()
-    fun returnStockChange() = "%.2f".format(repo.returnStockChange())
-
+    fun returnStockChange(mainActivity: MainActivity) =
+        "%.2f".format(repo.returnStockChange(mainActivity))
 }

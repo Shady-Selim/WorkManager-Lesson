@@ -1,13 +1,13 @@
 package com.shady.workmanagerlesson.data
 
 import androidx.work.*
+import com.shady.workmanagerlesson.ui.main.MainActivity
 import com.shady.workmanagerlesson.worker.StockUpdateWorker
 import java.util.concurrent.TimeUnit
-import kotlin.math.E
 import kotlin.random.Random
 
 class StockRepo {
-    fun returnStockChange(): Double {
+    fun returnStockChange(mainActivity: MainActivity): Double {
         val constraints = Constraints.Builder()
             .setRequiresBatteryNotLow(true)
             .setRequiredNetworkType(NetworkType.UNMETERED)
@@ -19,13 +19,13 @@ class StockRepo {
         val periodicWorker = PeriodicWorkRequest
             .Builder(StockUpdateWorker::class.java, 15, TimeUnit.SECONDS)
             .build()
-        WorkManager.getInstance().enqueue(oneTimeWorker)
+        WorkManager.getInstance(mainActivity).enqueue(oneTimeWorker)
         //WorkManager.getInstance().cancelAllWork()
-        /*WorkManager.getInstance().enqueueUniquePeriodicWork(
+        WorkManager.getInstance(mainActivity).enqueueUniquePeriodicWork(
             "periodicStockWorker",
             ExistingPeriodicWorkPolicy.KEEP,
             periodicWorker
-            )*/
+            )
         //WorkManager.getInstance().cancelUniqueWork("periodicStockWorker")
         return Random.nextDouble(0.10, 0.70)
     }
