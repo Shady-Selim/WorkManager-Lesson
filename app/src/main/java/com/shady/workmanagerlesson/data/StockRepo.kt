@@ -1,5 +1,6 @@
 package com.shady.workmanagerlesson.data
 
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.lifecycle.MutableLiveData
 import androidx.work.*
 import com.shady.workmanagerlesson.STOCK_SHARED_KEY
@@ -15,15 +16,15 @@ class StockRepo {
             .setRequiresBatteryNotLow(true)
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
-        val oneTimeWorker = OneTimeWorkRequest
-            .Builder(StockUpdateWorker::class.java)
-            .setConstraints(constraints)
+        val oneTimeWorker = OneTimeWorkRequestBuilder<StockUpdateWorker>()
+            .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .build()
         val periodicWorker = PeriodicWorkRequest
             .Builder(StockUpdateWorker::class.java, 15, TimeUnit.SECONDS)
             .build()
-        WorkManager.getInstance(mainActivity).enqueue(oneTimeWorker)
-        WorkManager.getInstance(mainActivity).getWorkInfoByIdLiveData(oneTimeWorker.id).observe(mainActivity,{
+        val workManager = WorkManager.getInstance(mainActivity)
+        workManager.enqueue(oneTimeWorker)
+        workManager.getWorkInfoByIdLiveData(oneTimeWorker.id).observe(mainActivity,{
             if (it.state == WorkInfo.State.SUCCEEDED){
                 stockPrice.postValue(it.outputData.getString(STOCK_SHARED_KEY))
             }

@@ -24,7 +24,7 @@ class StockUpdateWorker(private val context: Context, workParams: WorkerParamete
         // Notification
         val name= STOCK_NOTIFICATION_NAME
         val intent = Intent(context, MainActivity::class.java)
-        val pendingActivity = PendingIntent.getActivity(context,0,intent, 0)
+        val pendingActivity = PendingIntent.getActivity(context,0,intent, PendingIntent.FLAG_IMMUTABLE)
         val notification = NotificationCompat
             .Builder(context, NOTIFICATION_CHANNEL_ID)
             .setTicker(name)
