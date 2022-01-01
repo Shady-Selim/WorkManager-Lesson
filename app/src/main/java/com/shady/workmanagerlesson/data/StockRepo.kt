@@ -17,6 +17,7 @@ class StockRepo {
             .setRequiredNetworkType(NetworkType.UNMETERED)
             .build()
         val oneTimeWorker = OneTimeWorkRequestBuilder<StockUpdateWorker>()
+            .setConstraints(constraints)
             .setExpedited(OutOfQuotaPolicy.RUN_AS_NON_EXPEDITED_WORK_REQUEST)
             .build()
         val periodicWorker = PeriodicWorkRequest
